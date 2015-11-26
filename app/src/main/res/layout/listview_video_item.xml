@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="3dp"
+    android:background="@drawable/video_alternative_bgcolor">
+
+    <CheckBox
+        android:id="@+id/chk_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@drawable/video_alternative_bgcolor"/>
+    <FrameLayout
+        android:id="@+id/layoutImage"
+        android:layout_toRightOf="@id/chk_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imgVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:scaleType="centerInside"/>
+        <ViewStub
+            android:id="@+id/viewstub_video_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout="@layout/video_play_action"/>
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/txt_video_title"
+        style="@style/TextViewVideoStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/layoutImage"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:text="aa" />
+
+    <TextView
+        android:id="@+id/txt_video_size"
+        style="@style/TextViewVideoStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_video_title"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_toRightOf="@id/layoutImage"
+        android:text="aa" />
+</RelativeLayout>

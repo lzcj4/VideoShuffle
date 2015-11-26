@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.nero.videoshuffle" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BATTERY_STATS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationName"
+            android:value="@string/app_name" />
+
+        <activity
+            android:name=".Activity.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="standard"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:launchMode="standard"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1074891095854908"
+            android:exported="true" />
+
+        <activity android:name=".Activity.PhotoPreviewActivity_" />
+        <activity android:name=".Activity.PhotoListActivity_" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+
+        <provider
+            android:name=".provider.MyContentProvider"
+            android:authorities="com.nero.videoshuffle.myauthorities"
+            android:enabled="true"
+            android:exported="true" >
+        </provider>
+
+        <receiver
+            android:name=".Receiver.BootReceiver"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".Receiver.ScheduleReceiver"
+            android:enabled="true"
+            android:exported="true" >
+        </receiver>
+    </application>
+
+</manifest>
