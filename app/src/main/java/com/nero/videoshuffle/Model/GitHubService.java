@@ -1,7 +1,4 @@
-package com.nero.videoshuffle.Model;
-
-import org.androidannotations.annotations.rest.Get;
-import org.androidannotations.annotations.rest.Rest;
+package com.nero.videoshuffle.model;
 
 import java.util.List;
 

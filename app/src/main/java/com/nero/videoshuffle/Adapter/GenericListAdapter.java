@@ -1,4 +1,4 @@
-package com.nero.videoshuffle.Adapter;
+package com.nero.videoshuffle.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

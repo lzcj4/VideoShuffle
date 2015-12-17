@@ -1,7 +1,4 @@
-package com.nero.videoshuffle.Model;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.nero.videoshuffle.model;
 
 /**
  * Created by nlang on 15/11/24.

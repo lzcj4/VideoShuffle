@@ -1,14 +1,14 @@
-package com.nero.videoshuffle.Adapter;
+package com.nero.videoshuffle.adapter;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nero.videoshuffle.Model.MediaItem;
+import com.nero.videoshuffle.model.MediaItem;
 import com.nero.videoshuffle.MyApplication;
 import com.nero.videoshuffle.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -26,9 +26,6 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Created by nlang on 11/12/2015.
@@ -68,11 +65,12 @@ public class VideoAdapter extends CursorAdapter {
 //        String title = cursor.getString(getCursor().getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME));
 //        String size = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.SIZE));
 
+        long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media._ID));
         String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
         String title = cursor.getString(getCursor().getColumnIndex(MediaStore.Images.Media.TITLE));
         String size = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
 
-        result = new MediaItem(filePath, title, size);
+        result = new MediaItem(id, filePath, title, size);
         return result;
     }
 
@@ -92,25 +90,40 @@ public class VideoAdapter extends CursorAdapter {
                 !(convertView.getTag() instanceof ViewHolder)) {
             throw new IllegalArgumentException();
         }
-        MediaItem videoItem = getVideoItem(cursor);
+        final MediaItem videoItem = getVideoItem(cursor);
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
         String filePath = ImageDownloader.Scheme.FILE.wrap(videoItem.Data);
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true)
                 .showImageOnLoading(R.mipmap.ic_launcher)
                 .build();
-        ((ViewGroup)convertView).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        ((ViewGroup) convertView).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         viewHolder.mImgVideo.setTag(filePath);
         viewHolder.mImgVideo.setImageBitmap(null);
+        //Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(videoItem.Data, 0);
+        //viewHolder.mImgVideo.setImageBitmap(thumbnail);
         ImageLoader.getInstance().loadImage(filePath, new ImageSize(100, 100), options, new VideoImageListener(viewHolder.mImgVideo));
         //viewHolder.mTxtName.setText(videoItem.Title);
         viewHolder.mTxtSize.setText(videoItem.Size);
 
         Spanned htmlUrl = Html.fromHtml(String.format("<a href='http://www.163.com'>%s</a>", videoItem.Title));
         viewHolder.mTxtName.setText(htmlUrl);
-        viewHolder.mTxtName.setMovementMethod(LinkMovementMethod.getInstance());
+        // viewHolder.mTxtName.setMovementMethod(LinkMovementMethod.getInstance());
         viewHolder.mViewStub.setVisibility(View.VISIBLE);
+
+
+        final ImageView imgView = viewHolder.mImgVideo;
+        imgView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipData cd = ClipData.newRawUri("lable", videoItem.getUri());
+                View.DragShadowBuilder dsb = new View.DragShadowBuilder(imgView);
+                imgView.startDrag(cd, dsb, videoItem, 0);
+                return true;
+            }
+        });
+
 
         return convertView;
     }

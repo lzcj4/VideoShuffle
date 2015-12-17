@@ -1,4 +1,4 @@
-package com.nero.videoshuffle.Model;
+package com.nero.videoshuffle.model;
 
 import android.net.Uri;
 import android.os.Parcel;
@@ -13,8 +13,10 @@ public class MediaItem implements Parcelable {
     public String Data;
     public String Title;
     public String Size;
+    public long Id;
 
-    public MediaItem(String data, String title, String size) {
+    public MediaItem(long id, String data, String title, String size) {
+        this.Id = id;
         this.Data = data;
         this.Title = title;
         this.Size = size;
@@ -31,12 +33,14 @@ public class MediaItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(this.Id);
         dest.writeString(this.Data);
         dest.writeString(this.Title);
         dest.writeString(this.Size);
     }
 
     protected MediaItem(Parcel in) {
+        this.Id = in.readLong();
         this.Data = in.readString();
         this.Title = in.readString();
         this.Size = in.readString();

@@ -1,8 +1,8 @@
-package com.nero.videoshuffle.Activity;
+package com.nero.videoshuffle.activity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ContentProvider;
+import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -14,35 +14,33 @@ import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.nero.videoshuffle.Fragment.VideoViewFragment;
-import com.nero.videoshuffle.Fragment.VideoViewFragment_;
-import com.nero.videoshuffle.Model.GitHubService;
-import com.nero.videoshuffle.Model.GitHubServiceImpl;
-import com.nero.videoshuffle.Model.NotFoundHint;
-import com.nero.videoshuffle.Model.Repo;
-import com.nero.videoshuffle.Model.User;
-import com.nero.videoshuffle.MyApplication;
 import com.nero.videoshuffle.R;
-import com.nero.videoshuffle.Receiver.ScheduleReceiver;
+import com.nero.videoshuffle.fragment.VideoViewFragment;
+import com.nero.videoshuffle.fragment.VideoViewFragment_;
+import com.nero.videoshuffle.model.GitHubService;
+import com.nero.videoshuffle.model.GitHubServiceImpl;
+import com.nero.videoshuffle.model.MediaItem;
+import com.nero.videoshuffle.model.User;
 import com.nero.videoshuffle.provider.Apple;
 import com.nero.videoshuffle.provider.FruitColumn;
+import com.nero.videoshuffle.receiver.ScheduleReceiver;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,14 +52,14 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnNavigateNewFragment {
     @Override
     protected void onResume() {
         super.onResume();
         // AppEventsLogger.activateApp(this);
-        testWifi();
-        testAlarm();
-        testContentProvider();
+        //testWifi();
+        //testAlarm();
+        //testContentProvider();
 //        testRetrofit();
     }
 
@@ -72,7 +70,7 @@ public class MainActivity extends AppCompatActivity
         // AppEventsLogger.deactivateApp(this);
     }
 
-    VideoViewFragment mVideoFragment;
+    Fragment mCurrentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +79,27 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+        fab.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case DragEvent.ACTION_DROP:
+                        ClipData cd = event.getClipData();
+                        MediaItem item = (MediaItem) event.getLocalState();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
             }
         });
 
@@ -99,14 +112,15 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mVideoFragment = new VideoViewFragment_().builder().build();
-        getSupportFragmentManager().beginTransaction().add(R.id.viewContent, mVideoFragment).commit();
+        mCurrentFragment = new VideoViewFragment_().builder().build();
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.viewContent, mCurrentFragment).addToBackStack(null).commit();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mVideoFragment.onActivityResult(requestCode, resultCode, data);
+        mCurrentFragment.onActivityResult(requestCode, resultCode, data);
 
     }
 
@@ -142,6 +156,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -170,7 +185,7 @@ public class MainActivity extends AppCompatActivity
     private void testWifi() {
         WifiManager wm = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> list = wm.getConfiguredNetworks();
-       // wm.addNetwork()
+        // wm.addNetwork()
         for (WifiConfiguration item : list) {
             Log.i("wifi", item.toString());
             String name = item.SSID;
@@ -181,7 +196,7 @@ public class MainActivity extends AppCompatActivity
 
                     try {
                         Object pwd = pwField.get(item);
-                        Log.i("Wifi",pwd.toString());
+                        Log.i("Wifi", pwd.toString());
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -295,4 +310,16 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
+    @Override
+    public void navigate(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.viewContent, fragment);
+        //if (fragment instanceof VideoViewFragment)
+        ft.addToBackStack(fragment.getClass().getName());
+        ft.commit();
+        mCurrentFragment = fragment;
+
+    }
+
 }

@@ -1,10 +1,12 @@
-package com.nero.videoshuffle.Fragment;
+package com.nero.videoshuffle.fragment;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -36,13 +38,15 @@ import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.model.ShareVideo;
 import com.facebook.share.model.ShareVideoContent;
 import com.facebook.share.widget.ShareDialog;
-import com.nero.videoshuffle.Activity.PhotoListActivity_;
-import com.nero.videoshuffle.Activity.PhotoPreviewActivity;
-import com.nero.videoshuffle.Activity.PhotoPreviewActivity_;
-import com.nero.videoshuffle.Adapter.VideoAdapter;
-import com.nero.videoshuffle.Model.MediaItem;
 import com.nero.videoshuffle.MyApplication;
 import com.nero.videoshuffle.R;
+import com.nero.videoshuffle.activity.OnNavigateNewFragment;
+import com.nero.videoshuffle.activity.PhotoListActivity_;
+import com.nero.videoshuffle.activity.PhotoPreviewActivity;
+import com.nero.videoshuffle.activity.PhotoPreviewActivity_;
+import com.nero.videoshuffle.activity.UploadActivity;
+import com.nero.videoshuffle.adapter.VideoAdapter;
+import com.nero.videoshuffle.model.MediaItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -51,10 +55,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -66,6 +66,7 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
     private static final String TAG = VideoViewFragment.class.getSimpleName();
     private static final int LOAD_ID = 0;
     public static final int FACEBOOK_LOGIN_REQUEST_CODE = 64206;
+    public static final int YOUTUBE_PICK_VIDEO_REQUEST_CODE = 101;
 
     @ViewById(R.id.listview_video)
     ListView mListView;
@@ -145,6 +146,7 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     int mCurrentIndex = -1;
+
     @ItemLongClick(R.id.listview_video)
     boolean listviewItemSelected(int pos) {
         mCurrentIndex = pos;
@@ -214,7 +216,7 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_facebook) {
+        if (item.getItemId() == R.id.action_share_facebook) {
             if (getIsLogined()) {
                 shareToFacebook();
             } else {
@@ -228,9 +230,40 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
             } else if (item.getItemId() == R.id.action_list) {
                 intent.setClass(this.getContext(), PhotoListActivity_.class);
                 startActivity(intent);
+            } else if (item.getItemId() == R.id.action_video_playback) {
+                Fragment fragment = VideoPlaybackFragment_.newInstance(intent.getExtras());
+                ((OnNavigateNewFragment) getActivity()).navigate(fragment);
+            } else if (item.getItemId() == R.id.action_share_youtube) {
+                final MediaItem videoItem = mVideoAdapter.getItemByPos(mCurrentIndex);
+                Uri uri = ContentUris.appendId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon(), videoItem.Id).build();
+
+                Intent uploadIntent = new Intent(this.getContext(), UploadActivity.class);
+                uploadIntent.putExtra(PhotoPreviewActivity.CURRENT_SELECTED_INDEX, uri);
+                startActivity(uploadIntent);
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelable(PhotoPreviewActivity.CURRENT_SELECTED_INDEX, uri);
+//                Fragment fragment = new UploadFragment();
+//                fragment.setArguments(bundle);
+//                ((OnNavigateNewFragment) getActivity()).navigate(fragment);
+//                String error = "This phone no YouTuBe app installed";
+//                try {
+//                    String youtubeNamae=YouTubeIntents.getInstalledYouTubeVersionName(getContext());
+//                    boolean isSupport = YouTubeIntents.canResolveUploadIntent(getContext());
+//                    if (isSupport) {
+//                        MediaItem selectedItem = getContents().get(mCurrentIndex);
+//                        String uri = String.format("%s/%d", MediaStore.Video.Media.EXTERNAL_CONTENT_URI, selectedItem.Id);
+//                        Intent utbUploadIntent = YouTubeIntents.createUploadIntent(getContext(), Uri.parse(uri));
+//                        startActivity(utbUploadIntent);
+//
+//                    } else {
+//                        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+//                }
             }
         }
-
         return super.onContextItemSelected(item);
     }
 
@@ -239,7 +272,7 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(PhotoPreviewActivity.SOURCELIST, list);
-        bundle.putInt(PhotoPreviewActivity.CURRENTSELECTEDINDEX, mCurrentIndex);
+        bundle.putInt(PhotoPreviewActivity.CURRENT_SELECTED_INDEX, mCurrentIndex);
         intent.putExtras(bundle);
         return intent;
     }
@@ -249,10 +282,11 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
         Cursor cursor = mVideoAdapter.getCursor();
         cursor.moveToFirst();
         do {
+            long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID));
             String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
             String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE));
             String size = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.SIZE));
-            MediaItem mi = new MediaItem(filePath, title, size);
+            MediaItem mi = new MediaItem(id, filePath, title, size);
             list.add(mi);
         }
         while (cursor.moveToNext());

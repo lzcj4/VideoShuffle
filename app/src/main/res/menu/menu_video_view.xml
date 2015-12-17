@@ -1,20 +1,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-   >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_facebook"
+        android:id="@+id/action_share_facebook"
         android:orderInCategory="100"
         android:title="@string/action_facebook"
-        app:showAsAction="always" />
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_share_youtube"
+        android:orderInCategory="100"
+        android:title="@string/action_youtube"
+        app:showAsAction="collapseActionView" />
+
     <item
         android:id="@+id/action_preview"
         android:orderInCategory="100"
         android:title="@string/action_preview"
-        app:showAsAction="always" />
+        app:showAsAction="collapseActionView" />
 
     <item
         android:id="@+id/action_list"
         android:orderInCategory="100"
         android:title="@string/action_list"
-        app:showAsAction="always" />
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/action_video_playback"
+        android:orderInCategory="100"
+        android:title="@string/action_video_playback"
+        app:showAsAction="collapseActionView" />
+
 </menu>

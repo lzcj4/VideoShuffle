@@ -1,4 +1,4 @@
-package com.nero.videoshuffle.Model;
+package com.nero.videoshuffle.model;
 
 /**
  * Created by nlang on 15/11/24.

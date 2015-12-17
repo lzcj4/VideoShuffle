@@ -1,7 +1,6 @@
-package com.nero.videoshuffle.Model;
+package com.nero.videoshuffle.model;
 
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.ResponseBody;
 
 import java.util.concurrent.TimeUnit;
 

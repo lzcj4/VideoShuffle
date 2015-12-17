@@ -1,8 +1,7 @@
-package com.nero.videoshuffle.Activity;
+package com.nero.videoshuffle.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -11,12 +10,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
-import com.nero.videoshuffle.Adapter.VideoAdapter;
-import com.nero.videoshuffle.Model.MediaItem;
-import com.nero.videoshuffle.MyApplication;
+import com.nero.videoshuffle.model.MediaItem;
 import com.nero.videoshuffle.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,7 +32,7 @@ import uk.co.senab.photoview.PhotoView;
 public class PhotoPreviewActivity extends AppCompatActivity {
 
     public static final String SOURCELIST = "source_list";
-    public static final String CURRENTSELECTEDINDEX = "current_select_index";
+    public static final String CURRENT_SELECTED_INDEX = "current_select_index";
 
     @ViewById(R.id.viewpager_photo_preview)
     ViewPager mPreviewViewPager;
@@ -55,7 +50,7 @@ public class PhotoPreviewActivity extends AppCompatActivity {
             return;
         }
         mDataSource = bundle.getParcelableArrayList(SOURCELIST);
-        mCurrentIndex = bundle.getInt(CURRENTSELECTEDINDEX);
+        mCurrentIndex = bundle.getInt(CURRENT_SELECTED_INDEX);
         mPreviewViewPager.setAdapter(new PhotoPageAdapter());
         mPreviewViewPager.setCurrentItem(mCurrentIndex);
     }

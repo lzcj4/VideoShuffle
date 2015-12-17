@@ -1,18 +1,16 @@
-package com.nero.videoshuffle.Activity;
+package com.nero.videoshuffle.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.nero.videoshuffle.Adapter.GenericListAdapter;
-import com.nero.videoshuffle.Adapter.ViewHolderHelper;
-import com.nero.videoshuffle.Adapter.ViewTypeController;
-import com.nero.videoshuffle.Model.MediaItem;
+import com.nero.videoshuffle.adapter.GenericListAdapter;
+import com.nero.videoshuffle.adapter.ViewHolderHelper;
+import com.nero.videoshuffle.adapter.ViewTypeController;
+import com.nero.videoshuffle.model.MediaItem;
 import com.nero.videoshuffle.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;

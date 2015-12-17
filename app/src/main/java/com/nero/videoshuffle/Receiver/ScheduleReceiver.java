@@ -1,4 +1,4 @@
-package com.nero.videoshuffle.Receiver;
+package com.nero.videoshuffle.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
