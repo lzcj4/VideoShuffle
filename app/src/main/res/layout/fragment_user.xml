@@ -1,0 +1,41 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nero.videoshuffle.fragment.UserFragment">
+
+    <com.nero.videoshuffle.view.BalanceView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:mainColor="#33b5e5"
+        app:position="50"
+        app:secondColor="#ffff88ff" />
+
+    <!--TODO: Update blank fragment layout-->
+    <com.nero.videoshuffle.view.SpanListView
+        android:id="@android:id/list"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:divider="#7f50"
+        android:dividerHeight="2dp"
+        android:visibility="gone" />
+
+    <com.nero.videoshuffle.view.CircleImage
+        android:id="@+id/circleView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        app:radius="50dp"
+        app:ring_color="@color/colorAccent" />
+
+    <!--<com.nero.videoshuffle.view.CounterView-->
+    <!--android:id="@+id/counterView"-->
+    <!--android:layout_width="80dp"-->
+    <!--android:layout_height="80dp"-->
+    <!--android:layout_gravity="center" />-->
+
+</FrameLayout>

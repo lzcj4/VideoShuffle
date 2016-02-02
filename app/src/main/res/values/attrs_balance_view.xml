@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="BalanceView">
+        <attr name="exampleString" format="string" />
+        <attr name="position" format="integer" />
+        <attr name="mainColor" format="color|reference" />
+        <attr name="secondColor" format="color|reference" />
+        <attr name="thirdColor" format="color|reference" />
+    </declare-styleable>
+</resources>
