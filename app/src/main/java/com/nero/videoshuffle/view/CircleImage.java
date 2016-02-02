@@ -69,6 +69,7 @@ public class CircleImage extends View {
         mSecondPaint = new Paint();
         mSecondPaint.setColor(Color.parseColor("#8800ff00"));
         mSecondPaint.setAntiAlias(true);
+        mSecondPaint.setStyle(Paint.Style.STROKE);
         mSecondPaint.setStrokeWidth(mStrokeWidth);
         //mSecondPaint.setStyle(Paint.Style.FILL);
 
@@ -82,15 +83,15 @@ public class CircleImage extends View {
     }
 
     private float getRadius() {
-        float w = (getWidth() - getPaddingLeft() - getPaddingRight() - mStrokeWidth - mSecondRadius * 2) / 2.0f;
-        float h = (getHeight() - getPaddingTop() - getPaddingBottom() - mStrokeWidth - mSecondRadius * 2) / 2.0f;
+        float w = (getWidth() - getPaddingLeft() - getPaddingRight()) / 2.0f - mStrokeWidth - mSecondRadius;
+        float h = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2.0f - mStrokeWidth - mSecondRadius;
 
         float radius = Math.min(w, h);
         return radius;
     }
 
     float mDegree = 0;
-    float mSecondRadius = 30f;
+    float mSecondRadius = 50f;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -104,6 +105,11 @@ public class CircleImage extends View {
         int rc = canvas.save();
         canvas.translate(getWidth() / 2, getHeight() / 2);
         canvas.drawCircle(x, y, mSecondRadius, mSecondPaint);
+
+        String d = String.valueOf((int) mDegree);
+        float tw = mMainPaint.measureText(d, 0, d.length());
+        mMainPaint.setTextSize(30);
+        canvas.drawText(d, x - tw / 2, y, mMainPaint);
         canvas.restoreToCount(rc);
         startAnimation();
 
