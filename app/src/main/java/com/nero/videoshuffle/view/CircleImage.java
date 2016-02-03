@@ -2,12 +2,15 @@ package com.nero.videoshuffle.view;
 
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -69,9 +72,9 @@ public class CircleImage extends View {
         mSecondPaint = new Paint();
         mSecondPaint.setColor(Color.parseColor("#8800ff00"));
         mSecondPaint.setAntiAlias(true);
-        mSecondPaint.setStyle(Paint.Style.STROKE);
+        //mSecondPaint.setStyle(Paint.Style.STROKE);
         mSecondPaint.setStrokeWidth(mStrokeWidth);
-        //mSecondPaint.setStyle(Paint.Style.FILL);
+        mSecondPaint.setStyle(Paint.Style.FILL);
 
         int w = getWidth();
         int h = getHeight();
@@ -111,6 +114,7 @@ public class CircleImage extends View {
         mMainPaint.setTextSize(30);
         canvas.drawText(d, x - tw / 2, y, mMainPaint);
         canvas.restoreToCount(rc);
+        drawArc(canvas);
         startAnimation();
 
 //        canvas.drawCircle(w / 2, h / 2, mRadius, mMainPaint);
@@ -123,6 +127,23 @@ public class CircleImage extends View {
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.t, options);
 //        canvas.drawBitmap(bitmap, 0, 0, mMainPaint);
     }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void drawArc(Canvas canvas) {
+        int rc = canvas.save();
+        float cw = getWidth() / 2.0f;
+        float cy = getHeight() / 2.0f;
+        canvas.translate(cw, cy);
+
+        float radius = getRadius();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            canvas.drawArc(-radius, -radius, radius, radius, 0, mDegree, true, mSecondPaint);
+        } else {
+            canvas.drawArc(new RectF(-radius, -radius, radius, radius), 0, mDegree, true, mSecondPaint);
+        }
+        canvas.restoreToCount(rc);
+    }
+
 
     boolean isAnimationing = false;
 

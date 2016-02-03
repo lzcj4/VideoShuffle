@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.nero.videoshuffle.fragment.UserFragment">
 
+
     <com.nero.videoshuffle.view.BalanceView
         android:layout_width="match_parent"
         android:layout_height="200dp"
