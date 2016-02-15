@@ -1,0 +1,20 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.nero.videoshuffle.view.TestLayout
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="#ccc"
+        android:paddingBottom="40dp">
+
+        <com.nero.videoshuffle.view.TestView android:id="@+id/testView"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="#ff00bbff">
+
+        </com.nero.videoshuffle.view.TestView>
+    </com.nero.videoshuffle.view.TestLayout>
+
+</FrameLayout>

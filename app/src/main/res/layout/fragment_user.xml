@@ -31,7 +31,10 @@
         android:layout_height="200dp"
         android:layout_gravity="center"
         app:radius="50dp"
-        app:ring_color="@color/colorAccent" />
+        app:ring_color="@color/colorAccent"
+        android:visibility="gone"/>
+
+    <include layout="@layout/sample_test_layout"/>
 
     <!--<com.nero.videoshuffle.view.CounterView-->
     <!--android:id="@+id/counterView"-->
