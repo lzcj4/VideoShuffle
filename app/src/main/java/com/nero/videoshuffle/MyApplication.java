@@ -4,11 +4,7 @@ import android.Manifest;
 import android.app.Application;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ScrollView;
 
-import com.facebook.FacebookSdk;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
@@ -27,8 +23,6 @@ public class MyApplication extends Application {
     }
 
     private void initial3rdSdk() {
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        FacebookSdk.setIsDebugEnabled(true);
         LeakCanary.install(this);
 
         ImageLoaderConfiguration loaderConf = new ImageLoaderConfiguration.Builder(this)

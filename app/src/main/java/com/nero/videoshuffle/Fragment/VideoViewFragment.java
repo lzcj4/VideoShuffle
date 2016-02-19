@@ -23,28 +23,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.facebook.share.ShareApi;
-import com.facebook.share.Sharer;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
-import com.facebook.share.model.ShareVideo;
-import com.facebook.share.model.ShareVideoContent;
-import com.facebook.share.widget.ShareDialog;
 import com.nero.videoshuffle.MyApplication;
 import com.nero.videoshuffle.R;
 import com.nero.videoshuffle.activity.OnNavigateNewFragment;
 import com.nero.videoshuffle.activity.PhotoListActivity_;
 import com.nero.videoshuffle.activity.PhotoPreviewActivity;
 import com.nero.videoshuffle.activity.PhotoPreviewActivity_;
-import com.nero.videoshuffle.activity.UploadActivity;
 import com.nero.videoshuffle.adapter.VideoAdapter;
 import com.nero.videoshuffle.model.MediaItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -72,8 +56,6 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
     ListView mListView;
 
     VideoAdapter mVideoAdapter;
-    LoginButton mBtnLogin;
-
     @AfterViews
     void onAfterView() {
         setHasOptionsMenu(true);
@@ -84,7 +66,6 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
         MyApplication mApp = (MyApplication) getContext().getApplicationContext();
         mListView.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
         getLoaderManager().initLoader(LOAD_ID, null, this);
-        iniFacebook();
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -97,50 +78,12 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
         });
     }
 
-    CallbackManager mCallbackManager;
-    ShareDialog mShareDialog;
-
-    private void iniFacebook() {
-        mCallbackManager = CallbackManager.Factory.create();
-        //AppEventsLogger mLogger = AppEventsLogger.newLogger(this);
-
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-            }
-
-            @Override
-            public void onCancel() {
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-            }
-        });
-
-        mShareDialog = new ShareDialog(this);
-        mShareDialog.registerCallback(mCallbackManager, new FacebookCallback<Sharer.Result>() {
-            @Override
-            public void onSuccess(Sharer.Result result) {
-            }
-
-            @Override
-            public void onCancel() {
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-            }
-        });
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == FACEBOOK_LOGIN_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                mCallbackManager.onActivityResult(requestCode, resultCode, data);
-                shareToFacebook();
             }
         }
     }
@@ -166,62 +109,12 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
         getActivity().getMenuInflater().inflate(R.menu.menu_video_view, menu);
     }
 
-    private boolean getIsLogined() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        return accessToken != null;
-    }
 
-    private void shareToFacebook() {
-        final MediaItem videoItem = mVideoAdapter.getItemByPos(mCurrentIndex);
-        //  "publish_actions","public_profile", "user_friends"
-        Profile profile = Profile.getCurrentProfile();
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        ShareVideo shareVideo = new ShareVideo.Builder().setLocalUrl(videoItem.getUri()).build();
-        final ShareVideoContent videoContent = new ShareVideoContent.Builder().setVideo(shareVideo).build();
-
-//        ShareLinkContent linkContent = new ShareLinkContent.Builder()
-//                .setImageUrl(Uri.parse("http://img3.cache.netease.com/photo/0001/2015-11-17/B8K0P8BQ3R710001.jpg"))
-//                .build();
-//        if (mShareDialog.canShow(linkContent, ShareDialog.Mode.AUTOMATIC)) {
-//            mShareDialog.show(linkContent, ShareDialog.Mode.AUTOMATIC);
-//        }
-
-        if (mShareDialog.canShow(videoContent, ShareDialog.Mode.AUTOMATIC)) {
-            mShareDialog.show(videoContent, ShareDialog.Mode.AUTOMATIC);
-        } else {
-            Bitmap bitmap = BitmapFactory.decodeFile(videoItem.Data);
-            SharePhoto photo = new SharePhoto.Builder().setCaption("New test photo by video shuffle").setBitmap(bitmap).build();
-            final SharePhotoContent photoContent = new SharePhotoContent.Builder().setPhotos(Arrays.asList(photo)).build();
-
-            ShareApi.share(videoContent, new FacebookCallback<Sharer.Result>() {
-                @Override
-                public void onSuccess(Sharer.Result result) {
-                    Toast.makeText(VideoViewFragment.this.getContext(), String.format("Video uploaded post id:%s", result.getPostId()), Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onCancel() {
-                    Toast.makeText(VideoViewFragment.this.getContext(), "Video uploaded canceled", Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onError(FacebookException error) {
-                    Toast.makeText(VideoViewFragment.this.getContext(), String.format("Video uploaded error:%s", error.getMessage()), Toast.LENGTH_LONG).show();
-                }
-            });
-
-            // Toast.makeText(this.getContext(), "No Facebook app installed", Toast.LENGTH_LONG).show();
-        }
-    }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_share_facebook) {
-            if (getIsLogined()) {
-                shareToFacebook();
-            } else {
-                LoginManager.getInstance().logInWithPublishPermissions(getActivity(), null);
-            }
+
         } else {
             Intent intent = getNavigateIntent();
             if (item.getItemId() == R.id.action_preview) {
@@ -237,9 +130,7 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
                 final MediaItem videoItem = mVideoAdapter.getItemByPos(mCurrentIndex);
                 Uri uri = ContentUris.appendId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon(), videoItem.Id).build();
 
-                Intent uploadIntent = new Intent(this.getContext(), UploadActivity.class);
-                uploadIntent.putExtra(PhotoPreviewActivity.CURRENT_SELECTED_INDEX, uri);
-                startActivity(uploadIntent);
+
 //                Bundle bundle = new Bundle();
 //                bundle.putParcelable(PhotoPreviewActivity.CURRENT_SELECTED_INDEX, uri);
 //                Fragment fragment = new UploadFragment();
