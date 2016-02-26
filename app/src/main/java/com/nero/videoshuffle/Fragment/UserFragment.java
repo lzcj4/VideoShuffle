@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
  */
 public class UserFragment extends ListFragment {
 
-    @Bind(R.id.circleView)
+   // @Bind(R.id.circleView)
     CircleImage mCircleView;
     @Bind(android.R.id.list)
     SpanListView mListview;
@@ -72,6 +72,9 @@ public class UserFragment extends ListFragment {
         SpanAdapter adapter = new SpanAdapter(this.getActivity(), items);
         mListview.setAdapter(adapter);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void testProxy() {
 
         MyProxy myProxy = new MyProxy();
         myProxy.start();
@@ -86,7 +89,7 @@ public class UserFragment extends ListFragment {
                     BufferedInputStream bufferedStream = new BufferedInputStream(inputStream);
                     byte[] buffer = new byte[1024];
                     ByteArrayOutputStream byo = new ByteArrayOutputStream();
-                    int readLen ;
+                    int readLen;
                     while ((readLen = bufferedStream.read(buffer)) > 0) {
                         byo.write(buffer, 0, readLen);
                         Arrays.fill(buffer, (byte) 0);
@@ -99,8 +102,6 @@ public class UserFragment extends ListFragment {
 
             }
         }).start();
-
-
     }
 
     @Override

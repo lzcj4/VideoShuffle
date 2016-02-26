@@ -4,24 +4,32 @@ import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.animation.Animation;
+import android.widget.ImageView;
 
 import com.nero.videoshuffle.R;
 
 /**
  * Created by nlang on 1/21/2016.
  */
-public class CircleImage extends View {
+public class CircleImage extends ImageView {
     public CircleImage(Context context) {
         this(context, null);
     }
@@ -37,11 +45,15 @@ public class CircleImage extends View {
 
     int mRingColor = Color.parseColor("#ff000000");
     float mRadius = 0;
+    int resBG;
+    private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 
     private void initAttrs(Context context, AttributeSet attrs) {
+        super.setScaleType(SCALE_TYPE);
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CircleImage);
         mRingColor = ta.getColor(R.styleable.CircleImage_ring_color, 0);
         mRadius = ta.getDimension(R.styleable.CircleImage_radius, 0);
+        resBG = ta.getResourceId(R.styleable.CircleImage_bg_src, 0);
         initPaint();
         ta.recycle();
     }
@@ -98,14 +110,32 @@ public class CircleImage extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        //super.onDraw(canvas);
 
         float radius = getRadius();
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, mMainPaint);
 
+        int imgR = 100;
+        int rc = canvas.save();
+        canvas.translate(getWidth() / 2, getHeight() / 2);
+        Drawable drawable = getDrawable();
+        mBitmap = Bitmap.createBitmap(imgR, imgR, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(mBitmap);
+        drawable.draw(canvas);
+
+        BitmapShader bs = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        Paint p = new Paint();
+        p.setAntiAlias(true);
+        p.setShader(bs);
+//        RectF r = new RectF(-imgR, -imgR, imgR, imgR);
+//        r.inset();
+        canvas.drawCircle(0, 0, imgR, p);
+        canvas.restoreToCount(rc);
+
+
         float x = (float) (Math.cos(Math.PI / 180 * mDegree) * radius);
         float y = (float) (Math.sin(Math.PI / 180 * mDegree) * radius);
-        int rc = canvas.save();
+        rc = canvas.save();
         canvas.translate(getWidth() / 2, getHeight() / 2);
         canvas.drawCircle(x, y, mSecondRadius, mSecondPaint);
 
@@ -127,6 +157,7 @@ public class CircleImage extends View {
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.t, options);
 //        canvas.drawBitmap(bitmap, 0, 0, mMainPaint);
     }
+
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void drawArc(Canvas canvas) {

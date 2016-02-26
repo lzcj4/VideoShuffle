@@ -3,5 +3,6 @@
     <declare-styleable name="CircleImage">
         <attr name="ring_color" format="color"></attr>
         <attr name="radius" format="dimension"></attr>
+        <attr name="bg_src" format="reference"></attr>
     </declare-styleable>
 </resources>
