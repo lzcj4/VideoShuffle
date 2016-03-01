@@ -21,6 +21,7 @@ import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -56,6 +57,18 @@ public class CircleImage extends ImageView {
         resBG = ta.getResourceId(R.styleable.CircleImage_bg_src, 0);
         initPaint();
         ta.recycle();
+    }
+
+    @Override
+    public ScaleType getScaleType() {
+        return SCALE_TYPE;
+    }
+
+    @Override
+    public void setScaleType(ScaleType scaleType) {
+        if (scaleType != SCALE_TYPE) {
+            throw new IllegalArgumentException(String.format("ScaleType %s not supported.", scaleType));
+        }
     }
 
     @Override
@@ -105,6 +118,22 @@ public class CircleImage extends ImageView {
         return radius;
     }
 
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+        super.setImageBitmap(bm);
+        mBitmap = bm;
+    }
+
+    @Override
+    public void setImageDrawable(Drawable drawable) {
+        super.setImageDrawable(drawable);
+    }
+
+    @Override
+    public void setImageResource(@DrawableRes int resId) {
+        super.setImageResource(resId);
+    }
+
     float mDegree = 0;
     float mSecondRadius = 50f;
 
@@ -115,13 +144,13 @@ public class CircleImage extends ImageView {
         float radius = getRadius();
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, mMainPaint);
 
-        int imgR = 100;
+        int imgR = 200;
         int rc = canvas.save();
         canvas.translate(getWidth() / 2, getHeight() / 2);
         Drawable drawable = getDrawable();
         mBitmap = Bitmap.createBitmap(imgR, imgR, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(mBitmap);
-        drawable.draw(canvas);
+        drawable.draw(c);
 
         BitmapShader bs = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         Paint p = new Paint();
@@ -203,6 +232,7 @@ public class CircleImage extends ImageView {
             va.setRepeatCount(ValueAnimator.INFINITE);
             va.start();
             isAnimationing = true;
+            this.setOnClickListener(v -> Log.e("lambda", "test"));
         }
     }
 

@@ -49,6 +49,9 @@ import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
+import rx.Observable;
+import rx.observers.Observers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnNavigateNewFragment {
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         //testWifi();
         //testAlarm();
         //testContentProvider();
-//        testRetrofit();
+        testRetrofit();
     }
 
 
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity
 //        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.add(R.id.viewContent, mCurrentFragment).addToBackStack(null).commit();
 
-        UserFragment fragment=new UserFragment();
+        UserFragment fragment = new UserFragment();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.viewContent, fragment).addToBackStack(null).commit();
     }
@@ -275,6 +278,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void testRetrofit() {
+
+        final String RXTAG = "RX-TAG";
+        Log.e(RXTAG, "Main thread:" + Thread.currentThread().getId());
+        Observable.just("aa", "bb")
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.immediate())
+                .subscribe((s) -> Log.e(RXTAG, "Main thread:" + String.valueOf(Thread.currentThread().getId()) + " value:" + s));
+
         GitHubService gitHubService = GitHubServiceImpl.getInstance();
 
         User item = new User();
@@ -282,6 +293,7 @@ public class MainActivity extends AppCompatActivity
         item.company = "bb";
         item.login = "aa_tt";
         Call<User> addCall = gitHubService.addNewUser(item);
+
         addCall.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response, Retrofit retrofit) {
