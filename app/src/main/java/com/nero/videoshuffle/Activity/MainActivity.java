@@ -32,6 +32,7 @@ import android.view.View;
 
 import com.nero.videoshuffle.R;
 import com.nero.videoshuffle.fragment.UserFragment;
+import com.nero.videoshuffle.fragment.VideoViewFragment_;
 import com.nero.videoshuffle.model.GitHubService;
 import com.nero.videoshuffle.model.GitHubServiceImpl;
 import com.nero.videoshuffle.model.MediaItem;
@@ -113,14 +114,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-//        mCurrentFragment = new VideoViewFragment_().builder().build();
-//        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.add(R.id.viewContent, mCurrentFragment).addToBackStack(null).commit();
-
-        UserFragment fragment = new UserFragment();
+        mCurrentFragment = new VideoViewFragment_().builder().build();
         android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.viewContent, fragment).addToBackStack(null).commit();
+        ft.add(R.id.viewContent, mCurrentFragment).addToBackStack(null).commit();
+
+//        UserFragment fragment = new UserFragment();
+//        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.add(R.id.viewContent, fragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -304,7 +304,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Throwable t) {
-
             }
         });
         Call<User> call = gitHubService.listUser();

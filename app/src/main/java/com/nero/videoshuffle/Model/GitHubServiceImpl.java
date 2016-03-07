@@ -12,10 +12,15 @@ import retrofit.Retrofit;
  */
 public class GitHubServiceImpl {
     public final static String GITBASEURL = "https://api.github.com";
-    static OkHttpClient httpClient = new OkHttpClient();
+    static OkHttpClient httpClient;
+
+    static {
+        httpClient = new OkHttpClient();
+       // httpClient.networkInterceptors().add(new StethoInterceptor());
+    }
 
     public static GitHubService getInstance() {
-       // httpClient.networkInterceptors().add(new StethoInterceptor());
+        // httpClient.networkInterceptors().add(new StethoInterceptor());
         httpClient.setReadTimeout(10 * 60, TimeUnit.SECONDS);
         httpClient.setWriteTimeout(10 * 60, TimeUnit.SECONDS);
         Retrofit builder = new Retrofit.Builder()

@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.pm.PackageManager;
 import android.support.v4.content.ContextCompat;
 
+import com.facebook.stetho.Stetho;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
@@ -24,7 +25,7 @@ public class MyApplication extends Application {
 
     private void initial3rdSdk() {
         LeakCanary.install(this);
-
+        Stetho.initializeWithDefaults(this);
         ImageLoaderConfiguration loaderConf = new ImageLoaderConfiguration.Builder(this)
                 //.writeDebugLogs()
 //                    .memoryCacheSize((int) (Runtime.getRuntime().maxMemory() / 5))
