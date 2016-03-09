@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
@@ -81,6 +82,7 @@ public class MyHookService extends AccessibilityService {
                 }
             }
 
+
             //AccessibilityNodeInfo node = AccessibilityUtil.getNodeByClass(rootNode, ImageView.class);
 
             AccessibilityNodeInfo node = AccessibilityUtil.getNodeInRect(rootNode, (childNode) -> {
@@ -97,7 +99,7 @@ public class MyHookService extends AccessibilityService {
             );
             if (null != node) {
                 Log.i(TAG, "================Action==================");
-                node.performAction(AccessibilityNodeInfo.ACTION_FOCUS)
+                node.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
                 node.performAction(AccessibilityNodeInfo.ACTION_SELECT);
                 node.performAction(AccessibilityNodeInfo.ACTION_COPY);
 
