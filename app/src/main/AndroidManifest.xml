@@ -42,7 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.PhotoPreviewActivity_" />
         <activity android:name=".activity.PhotoListActivity_" />
         <activity
@@ -54,7 +53,6 @@
             android:authorities="com.nero.videoshuffle.myauthorities"
             android:enabled="true"
             android:exported="true" />
-
 
         <receiver
             android:name=".receiver.BootReceiver"
@@ -69,17 +67,18 @@
             android:enabled="true"
             android:exported="true" />
 
-        <service
-            android:name=".accessibility.MyHookService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
+        <!-- <service -->
+        <!-- android:name=".accessibility.MyHookService" -->
+        <!-- android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.accessibilityservice.AccessibilityService" /> -->
+        <!-- </intent-filter> -->
 
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/accessibility_config"></meta-data>
-        </service>
+
+        <!-- <meta-data -->
+        <!-- android:name="android.accessibilityservice" -->
+        <!-- android:resource="@xml/accessibility_config"></meta-data> -->
+        <!-- </service> -->
 
     </application>
 

@@ -46,7 +46,6 @@ public class VideoViewFragment extends Fragment implements LoaderManager.LoaderC
     private static final String TAG = VideoViewFragment.class.getSimpleName();
     private static final int LOAD_ID = 0;
     public static final int FACEBOOK_LOGIN_REQUEST_CODE = 64206;
-    public static final int YOUTUBE_PICK_VIDEO_REQUEST_CODE = 101;
 
     @ViewById(R.id.listview_video)
     ListView mListView;

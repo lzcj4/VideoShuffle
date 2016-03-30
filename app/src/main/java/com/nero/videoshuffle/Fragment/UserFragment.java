@@ -1,6 +1,7 @@
 package com.nero.videoshuffle.fragment;
 
 
+import android.annotation.TargetApi;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 
 import com.nero.videoshuffle.R;
+import com.nero.videoshuffle.util.JXTest;
 import com.nero.videoshuffle.util.MyProxy;
 import com.nero.videoshuffle.view.CircleImage;
 import com.nero.videoshuffle.view.SpanAdapter;
@@ -62,6 +64,7 @@ public class UserFragment extends ListFragment {
         return view;
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         String[] items = new String[10];
@@ -72,6 +75,13 @@ public class UserFragment extends ListFragment {
         SpanAdapter adapter = new SpanAdapter(this.getActivity(), items);
         mListview.setAdapter(adapter);
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //JXTest.testJXJava();
     }
 
     private void testProxy() {

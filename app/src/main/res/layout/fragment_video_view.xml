@@ -46,6 +46,7 @@
         android:textOn="On"
         android:textOff="Off"
         android:checked="true"
+        android:track="@drawable/__leak_canary_icon"
         android:background="@drawable/switch_bg"
         android:thumb="@drawable/switch_thumb"/>
     <ListView

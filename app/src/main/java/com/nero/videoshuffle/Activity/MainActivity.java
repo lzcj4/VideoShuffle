@@ -51,7 +51,6 @@ import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 import rx.Observable;
-import rx.observers.Observers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity
@@ -83,27 +82,23 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+        fab.setOnClickListener((view) -> {
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         });
-        fab.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case DragEvent.ACTION_DROP:
-                        ClipData cd = event.getClipData();
-                        MediaItem item = (MediaItem) event.getLocalState();
-                        break;
-                    default:
-                        break;
-                }
-                return true;
+
+
+        fab.setOnDragListener((v, event) -> {
+            int action = event.getAction();
+            switch (action) {
+                case DragEvent.ACTION_DROP:
+                    ClipData cd = event.getClipData();
+                    MediaItem item = (MediaItem) event.getLocalState();
+                    break;
+                default:
+                    break;
             }
+            return true;
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -114,13 +109,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        mCurrentFragment = new VideoViewFragment_().builder().build();
-        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.viewContent, mCurrentFragment).addToBackStack(null).commit();
-
-//        UserFragment fragment = new UserFragment();
+//        mCurrentFragment = new VideoViewFragment_().builder().build();
 //        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        ft.add(R.id.viewContent, fragment).addToBackStack(null).commit();
+//        ft.add(R.id.viewContent, mCurrentFragment).addToBackStack(null).commit();
+
+        UserFragment fragment = new UserFragment();
+        android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.viewContent, fragment).addToBackStack(null).commit();
     }
 
     @Override

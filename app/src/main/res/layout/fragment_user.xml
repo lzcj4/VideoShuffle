@@ -25,11 +25,15 @@
         android:dividerHeight="2dp"
         android:visibility="gone" />
 
+    <com.nero.videoshuffle.view.Chart
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.nero.videoshuffle.view.CircleImage
         android:id="@+id/circleView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_gravity="center"
+        android:layout_gravity="bottom|center"
         android:src="@drawable/test"
         app:radius="50dp"
         app:ring_color="@color/colorAccent"/>
