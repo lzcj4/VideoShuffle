@@ -27,7 +27,7 @@ public class ScheduleReceiver extends BroadcastReceiver {
         cv.put(FruitColumn.Apple.COL_PRICE, 25);
         cv.put(FruitColumn.Apple.COL_AMOUNT, 14);
         Uri uri = cr.insert(FruitColumn.Apple.CONTENT_URI, cv);
-        Log.i("Content provide", uri.toString());
+        Log.i("content provide", uri.toString());
 
         Cursor cursor = cr.query(FruitColumn.Apple.CONTENT_URI, null, null, null, null);
         cursor.moveToFirst();

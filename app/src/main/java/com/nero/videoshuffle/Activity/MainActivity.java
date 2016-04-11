@@ -28,11 +28,9 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.nero.videoshuffle.R;
 import com.nero.videoshuffle.fragment.UserFragment;
-import com.nero.videoshuffle.fragment.VideoViewFragment_;
 import com.nero.videoshuffle.model.GitHubService;
 import com.nero.videoshuffle.model.GitHubServiceImpl;
 import com.nero.videoshuffle.model.MediaItem;
@@ -62,7 +60,8 @@ public class MainActivity extends AppCompatActivity
         //testWifi();
         //testAlarm();
         //testContentProvider();
-        testRetrofit();
+        //testRetrofit();
+        testRXJava();
     }
 
 
@@ -241,7 +240,7 @@ public class MainActivity extends AppCompatActivity
         cv.put(FruitColumn.Apple.COL_PRICE, 25);
         cv.put(FruitColumn.Apple.COL_AMOUNT, 14);
         Uri uri = cr.insert(FruitColumn.Apple.CONTENT_URI, cv);
-        Log.i("Content provide", uri.toString());
+        Log.i("content provide", uri.toString());
 
         Cursor cursor = cr.query(FruitColumn.Apple.CONTENT_URI, null, null, null, null);
         cursor.moveToFirst();
@@ -272,15 +271,23 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void testRetrofit() {
-
+    private  void testRXJava(){
         final String RXTAG = "RX-TAG";
         Log.e(RXTAG, "Main thread:" + Thread.currentThread().getId());
-        Observable.just("aa", "bb")
+        Observable.just(1,2)
+                .map(
+                        i->i.toString()
+                )
+                .map(
+                        i->Integer.getInteger(i)
+                )
                 .subscribeOn(Schedulers.computation())
                 .observeOn(Schedulers.immediate())
-                .subscribe((s) -> Log.e(RXTAG, "Main thread:" + String.valueOf(Thread.currentThread().getId()) + " value:" + s));
-
+                .subscribe(
+                        (s) -> Log.e(RXTAG, "Main thread:" + String.valueOf(Thread.currentThread().getId()) + " value:" + s)
+                );
+    }
+    private void testRetrofit() {
         GitHubService gitHubService = GitHubServiceImpl.getInstance();
 
         User item = new User();

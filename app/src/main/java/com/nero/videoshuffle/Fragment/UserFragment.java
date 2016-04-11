@@ -1,8 +1,6 @@
 package com.nero.videoshuffle.fragment;
 
 
-import android.annotation.TargetApi;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,11 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 
 import com.nero.videoshuffle.R;
-import com.nero.videoshuffle.util.JXTest;
+import com.nero.videoshuffle.netsearch.EnSearcher;
 import com.nero.videoshuffle.util.MyProxy;
 import com.nero.videoshuffle.view.CircleImage;
 import com.nero.videoshuffle.view.SpanAdapter;
@@ -27,14 +23,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.SocketAddress;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import butterknife.Bind;
@@ -45,7 +36,7 @@ import butterknife.ButterKnife;
  */
 public class UserFragment extends ListFragment {
 
-   // @Bind(R.id.circleView)
+    // @Bind(R.id.circleView)
     CircleImage mCircleView;
     @Bind(android.R.id.list)
     SpanListView mListview;
@@ -75,6 +66,13 @@ public class UserFragment extends ListFragment {
         SpanAdapter adapter = new SpanAdapter(this.getActivity(), items);
         mListview.setAdapter(adapter);
         super.onViewCreated(view, savedInstanceState);
+        EnSearcher searcher = new EnSearcher();
+        searcher.search("test");
+//        SearchFactory.getSearchService().getHome().subscribe(
+//                (str) -> {
+//                    Log.d("test",str.toString());
+//        });
+
     }
 
     @Override

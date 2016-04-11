@@ -4,8 +4,14 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.DragEvent;
 import android.view.View;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * Created by nlang on 3/29/2016.
@@ -120,9 +126,21 @@ public class Chart extends View {
         canvas.drawLine(cx - bodyWidth, cay, cx - bodyWidth, cay + DEFAULTLEGLEN, mPaint);
 
         canvas.drawLine(cx + bodyWidth, cay, cx + bodyWidth, cay + DEFAULTLEGLEN, mPaint);
+
     }
 
     private void drawCircle() {
+
+    }
+
+    private  void  startTimer(){
+        Timer timer=new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+        },1000);
 
     }
 

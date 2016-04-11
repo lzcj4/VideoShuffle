@@ -104,7 +104,7 @@ public class VideoAdapter extends CursorAdapter {
         //Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(videoItem.Data, 0);
         //viewHolder.mImgVideo.setImageBitmap(thumbnail);
         ImageLoader.getInstance().loadImage(filePath, new ImageSize(100, 100), options, new VideoImageListener(viewHolder.mImgVideo));
-        //viewHolder.mTxtName.setText(videoItem.Title);
+        //viewHolder.mTxtName.setText(videoItem.title);
         viewHolder.mTxtSize.setText(videoItem.Size);
 
         Spanned htmlUrl = Html.fromHtml(String.format("<a href='http://www.163.com'>%s</a>", videoItem.Title));
